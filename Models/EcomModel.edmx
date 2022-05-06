@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EcomAppDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CUSTOMER">
+          <Key>
+            <PropertyRef Name="CUSTOMERID" />
+          </Key>
+          <Property Name="CUSTOMERID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="FIRSTNAME" Type="nvarchar" MaxLength="100" />
+          <Property Name="LASTNAME" Type="nvarchar" MaxLength="100" />
+          <Property Name="EMAIL" Type="nvarchar" MaxLength="50" />
+          <Property Name="ADDRESS" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="OrderItems">
+          <Key>
+            <PropertyRef Name="ORDERITEMID" />
+          </Key>
+          <Property Name="ORDERITEMID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ORDERID" Type="int" />
+          <Property Name="PRODUCTID" Type="int" />
+          <Property Name="QUANTITY" Type="int" />
+          <Property Name="PRICE" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="RETURNABLE" Type="bit" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="ORDERID" />
+          </Key>
+          <Property Name="ORDERID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CUSTOMERID" Type="nvarchar" MaxLength="10" />
+          <Property Name="ORDERDATE" Type="date" />
+          <Property Name="DELIVERYEXPECTED" Type="date" />
+          <Property Name="CONTAINSGIFT" Type="bit" />
+          <Property Name="SHIPPINGMODE" Type="nvarchar" MaxLength="30" />
+          <Property Name="ORDERSOURCE" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="PRODUCTID" />
+          </Key>
+          <Property Name="PRODUCTID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PRODUCTNAME" Type="nvarchar" MaxLength="50" />
+          <Property Name="PACKHEIGHT" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="PACKWIDTH" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="PACKWEIGHT" Type="decimal" Precision="8" Scale="3" />
+          <Property Name="COLOUR" Type="nvarchar" MaxLength="20" />
+          <Property Name="SIZE" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <Association Name="FK__OrderItem__ORDER__403A8C7D">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="OrderItems" Type="Self.OrderItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="ORDERID" />
+            </Principal>
+            <Dependent Role="OrderItems">
+              <PropertyRef Name="ORDERID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderItem__PRODU__412EB0B6">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="OrderItems" Type="Self.OrderItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="PRODUCTID" />
+            </Principal>
+            <Dependent Role="OrderItems">
+              <PropertyRef Name="PRODUCTID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EcomAppDataModelStoreContainer">
+          <EntitySet Name="CUSTOMER" EntityType="Self.CUSTOMER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderItems" EntityType="Self.OrderItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__OrderItem__ORDER__403A8C7D" Association="Self.FK__OrderItem__ORDER__403A8C7D">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderItems" EntitySet="OrderItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderItem__PRODU__412EB0B6" Association="Self.FK__OrderItem__PRODU__412EB0B6">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="OrderItems" EntitySet="OrderItems" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EcomAppDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="OrderItem">
+          <Key>
+            <PropertyRef Name="ORDERITEMID" />
+          </Key>
+          <Property Name="ORDERITEMID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ORDERID" Type="Int32" />
+          <Property Name="PRODUCTID" Type="Int32" />
+          <Property Name="QUANTITY" Type="Int32" />
+          <Property Name="PRICE" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="RETURNABLE" Type="Boolean" />
+          <NavigationProperty Name="Order" Relationship="Self.FK__OrderItem__ORDER__403A8C7D" FromRole="OrderItems" ToRole="Orders" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__OrderItem__PRODU__412EB0B6" FromRole="OrderItems" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="ORDERID" />
+          </Key>
+          <Property Name="ORDERID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CUSTOMERID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ORDERDATE" Type="DateTime" Precision="0" />
+          <Property Name="DELIVERYEXPECTED" Type="DateTime" Precision="0" />
+          <Property Name="CONTAINSGIFT" Type="Boolean" />
+          <Property Name="SHIPPINGMODE" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="ORDERSOURCE" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__ORDER__403A8C7D" FromRole="Orders" ToRole="OrderItems" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="PRODUCTID" />
+          </Key>
+          <Property Name="PRODUCTID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PRODUCTNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PACKHEIGHT" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="PACKWIDTH" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="PACKWEIGHT" Type="Decimal" Precision="8" Scale="3" />
+          <Property Name="COLOUR" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SIZE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__PRODU__412EB0B6" FromRole="Products" ToRole="OrderItems" />
+        </EntityType>
+        <Association Name="FK__OrderItem__ORDER__403A8C7D">
+          <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
+          <End Role="OrderItems" Type="Self.OrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="ORDERID" />
+            </Principal>
+            <Dependent Role="OrderItems">
+              <PropertyRef Name="ORDERID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderItem__PRODU__412EB0B6">
+          <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="OrderItems" Type="Self.OrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="PRODUCTID" />
+            </Principal>
+            <Dependent Role="OrderItems">
+              <PropertyRef Name="PRODUCTID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EcomAppDataEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="OrderItems" EntityType="Self.OrderItem" />
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <AssociationSet Name="FK__OrderItem__ORDER__403A8C7D" Association="Self.FK__OrderItem__ORDER__403A8C7D">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderItems" EntitySet="OrderItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderItem__PRODU__412EB0B6" Association="Self.FK__OrderItem__PRODU__412EB0B6">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="OrderItems" EntitySet="OrderItems" />
+          </AssociationSet>
+          <EntitySet Name="CUSTOMERs" EntityType="EcomAppDataModel.CUSTOMER" />
+        </EntityContainer>
+        <EntityType Name="CUSTOMER">
+          <Key>
+            <PropertyRef Name="CUSTOMERID" />
+          </Key>
+          <Property Name="CUSTOMERID" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="FIRSTNAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LASTNAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ADDRESS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EcomAppDataModelStoreContainer" CdmEntityContainer="EcomAppDataEntities">
+          <EntitySetMapping Name="OrderItems">
+            <EntityTypeMapping TypeName="EcomAppDataModel.OrderItem">
+              <MappingFragment StoreEntitySet="OrderItems">
+                <ScalarProperty Name="ORDERITEMID" ColumnName="ORDERITEMID" />
+                <ScalarProperty Name="ORDERID" ColumnName="ORDERID" />
+                <ScalarProperty Name="PRODUCTID" ColumnName="PRODUCTID" />
+                <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+                <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+                <ScalarProperty Name="RETURNABLE" ColumnName="RETURNABLE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="EcomAppDataModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="ORDERID" ColumnName="ORDERID" />
+                <ScalarProperty Name="CUSTOMERID" ColumnName="CUSTOMERID" />
+                <ScalarProperty Name="ORDERDATE" ColumnName="ORDERDATE" />
+                <ScalarProperty Name="DELIVERYEXPECTED" ColumnName="DELIVERYEXPECTED" />
+                <ScalarProperty Name="CONTAINSGIFT" ColumnName="CONTAINSGIFT" />
+                <ScalarProperty Name="SHIPPINGMODE" ColumnName="SHIPPINGMODE" />
+                <ScalarProperty Name="ORDERSOURCE" ColumnName="ORDERSOURCE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="EcomAppDataModel.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="PRODUCTID" ColumnName="PRODUCTID" />
+                <ScalarProperty Name="PRODUCTNAME" ColumnName="PRODUCTNAME" />
+                <ScalarProperty Name="PACKHEIGHT" ColumnName="PACKHEIGHT" />
+                <ScalarProperty Name="PACKWIDTH" ColumnName="PACKWIDTH" />
+                <ScalarProperty Name="PACKWEIGHT" ColumnName="PACKWEIGHT" />
+                <ScalarProperty Name="COLOUR" ColumnName="COLOUR" />
+                <ScalarProperty Name="SIZE" ColumnName="SIZE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CUSTOMERs">
+            <EntityTypeMapping TypeName="EcomAppDataModel.CUSTOMER">
+              <MappingFragment StoreEntitySet="CUSTOMER">
+                <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="LASTNAME" ColumnName="LASTNAME" />
+                <ScalarProperty Name="FIRSTNAME" ColumnName="FIRSTNAME" />
+                <ScalarProperty Name="CUSTOMERID" ColumnName="CUSTOMERID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
